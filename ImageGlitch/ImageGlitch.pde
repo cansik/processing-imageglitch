@@ -18,6 +18,7 @@ void draw()
   PImage wrackedImage = glitcher.glitchImage(glitcher.resizeImage(img));
   image(wrackedImage, 0, 0, width, height);
   
+  saveFrame("output/frames####.png");
   drawFrameRate();
 }
 
