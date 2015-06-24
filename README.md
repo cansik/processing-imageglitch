@@ -1,6 +1,9 @@
 # Processing Image Glitch
 Processing image glitch is a small library to add glitch to a PImage in Processing. The algorithm uses the singularity of jpeg compression which allows to display even an corrupted image. 
 
+### Example Image
+![alt text](https://raw.githubusercontent.com/cansik/processing-imageglitch/master/example.jpg "Image Glitch Example")
+
 ### Usage
 ```java
 PImage img;
@@ -22,9 +25,6 @@ void draw()
   image(wrackedImage, 0, 0, width, height);
 }
 ```
-
-### Example Image
-![alt text](https://raw.githubusercontent.com/cansik/processing-imageglitch/master/example.jpg "Image Glitch Example")
 
 ### Author
 Florian 2015
