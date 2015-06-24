@@ -1,7 +1,7 @@
 # Processing Image Glitch
 Processing image glitch is a small library to add glitch to a PImage in Processing. The algorithm uses the singularity of jpeg compression which allows to display even an corrupted image.
 
-Currently it is a very early alpha version. So the interface to the Glitcher class will change sooner or later!
+Currently it is a very early **alpha version**. So the interface to the Glitcher class will change sooner or later!
 
 ### Example
 ![alt text](https://raw.githubusercontent.com/cansik/processing-imageglitch/master/media/glitch_example.gif "Image Glitch Example")
