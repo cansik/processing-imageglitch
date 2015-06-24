@@ -2,8 +2,12 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
+import sun.awt.image.ImageFormatException;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
+
 public class Glitcher
-{
+{ 
   public PImage resizeImage(PImage image)
   {
      PImage resizedImage = image.copy();
@@ -13,7 +17,7 @@ public class Glitcher
   
   public PImage glitchImage(PImage image)
   {
-    byte[] rawData = bufferedImageToByteArray(pImageToBufferedImage(image));
+    byte[] rawData = bufferedImageToByteArrayFast(pImageToBufferedImage(image));
     
     int jpegHeaderEnd = getJpegHeaderSize(rawData);
 
@@ -26,18 +30,33 @@ public class Glitcher
   }
   
   private byte[] bufferedImageToByteArray(BufferedImage img) {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
     try {
-        ImageIO.write(img, "jpg", baos);
-        baos.flush();
-        byte[] imageInByte = baos.toByteArray();
-        baos.close();
+        ImageIO.write(img, "jpg", os);
+        os.flush();
+        byte[] imageInByte = os.toByteArray();
+        os.close();
         return imageInByte;
     } catch (IOException e) {
         //e.printStackTrace();
     }
     return null;
   }
+  
+  // -24 ms in algorithm
+  public byte[] bufferedImageToByteArrayFast(BufferedImage img){
+      ByteArrayOutputStream os = new ByteArrayOutputStream();
+      try
+      {
+        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
+        encoder.encode(img);
+        byte[] imageInByte = os.toByteArray();
+        os.close();
+        return imageInByte;
+      }
+      catch(Exception ex) {}
+      return null;
+    }
   
   private BufferedImage byteArrayToBufferedImage(byte[] data)
   {
@@ -46,7 +65,7 @@ public class Glitcher
            BufferedImage wrackedImage = ImageIO.read(in);
            return wrackedImage;
       } catch (IOException e) {
-          //e.printStackTrace(); //<>//
+          //e.printStackTrace();
       }
       
       return null;
@@ -62,8 +81,7 @@ public class Glitcher
   
   private BufferedImage pImageToBufferedImage(PImage img)
   {
-    //image.getImage() is depricated! -> todo: find better way to get buffered image
-    return (BufferedImage)img.getImage();
+    return (BufferedImage)img.getNative();
   }
 
   private int findJpegHeaderEnd(byte[] data) {  
@@ -91,7 +109,7 @@ public class Glitcher
     void glitchJpeg(byte[] data, int jpeg_header_end, float seed, float amount)
     {
         //seed is from 0 to 100;
-        int range = data.length - jpeg_header_end; //<>//
+        int range = data.length - jpeg_header_end;
         int index = (int)((seed / 100) * range) + jpeg_header_end;
         
         data[index] *= amount;

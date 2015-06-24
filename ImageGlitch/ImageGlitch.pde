@@ -4,6 +4,8 @@ Glitcher glitcher;
 
 PFont font;
 
+long msCount = 0;
+
 void setup()
 {
   size(640, 360);
@@ -15,16 +17,21 @@ void setup()
 
 void draw()
 {
-  PImage wrackedImage = glitcher.glitchImage(glitcher.resizeImage(img));
+  long t = System.currentTimeMillis();
+  //PImage wrackedImage = glitcher.glitchImage(glitcher.resizeImage(img));
+  PImage wrackedImage = glitcher.glitchImage(img);
+  t = System.currentTimeMillis() - t;
+  
   image(wrackedImage, 0, 0, width, height);
   
-  saveFrame("output/frames####.png");
-  drawFrameRate();
+  //saveFrame("output/frames####.png");
+  msCount += t;
+  drawFrameRate(msCount / frameCount);
 }
 
-void drawFrameRate()
+void drawFrameRate(float ticks)
 {
-   textFont(font,24);
+   textFont(font,12);
    fill(255);
-   text(frameRate,20,30);
+   text("FPS: " + frameRate + "\nAlg: " + ticks + " Ms",20,30);
 }
